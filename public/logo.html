@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects4 Logo with Earth</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap');
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(243 244 246);
+            font-family: Arial, sans-serif;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 185px;
+            font-weight: 900;
+            margin-right: -20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            color: #000000;
+            text-transform: lowercase;
+            letter-spacing: -8px;
+            position: relative;
+            top: 10px;
+            right: 0px;
+            z-index: 1;
+            line-height: 0.8;
+        }
+        .slash {
+            font-family: 'Roboto', sans-serif;
+            font-size: 250px;
+            font-weight: 900;
+            color: #000000;
+            position: relative;
+            top: 5px;
+            right: -40px;
+            z-index: 1;
+            margin-left: -10px;
+        }
+        #rotatingText {
+            fill: white;
+            font-size: 24px;
+            font-weight: bold;
+            filter: url(#textShadow);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <div class="text">projects4</div>
+        <div class="slash">/</div>
+        <svg width="380" height="260" viewBox="0 0 380 260">
+            <defs>
+                <path id="ringPathFront" d="M60 140 A140 45 0 0 1 340 140" transform="rotate(-15, 200, 140)" />
+                <path id="ringPathBack" d="M340 140 A140 45 0 0 1 60 140" transform="rotate(-15, 200, 140)" />
+                <filter id="ringShadow">
+                    <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.3"/>
+                </filter>
+                <filter id="textShadow">
+                    <feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.5"/>
+                </filter>
+            </defs>
+            
+            <!-- Back part of the Ring -->
+            <use href="#ringPathBack" fill="none" stroke="black" stroke-width="40" filter="url(#ringShadow)"/>
+            
+            <!-- Earth Image -->
+            <image href="earth.png" x="100" y="30" width="200" height="200" />
+            
+            <!-- Front part of the Ring -->
+            <use href="#ringPathFront" fill="none" stroke="black" stroke-width="40" filter="url(#ringShadow)"/>
+            
+            <!-- Rotating Text on Front Path -->
+            <text id="rotatingText">
+                <textPath href="#ringPathFront" id="textPath" startOffset="0%">
+                    <tspan class="word" id="currentWord"></tspan>
+                </textPath>
+            </text>
+        </svg>
+    </div>
+    <script>
+        const text = document.getElementById('rotatingText');
+        const textPath = document.getElementById('textPath');
+        const currentWord = document.getElementById('currentWord');
+        const words = ['uci ', 'ucr ', 'ucla ', 'ucsb ', 'biz ', 'ai '];
+        let currentWordIndex = 0;
+        let offset = -10;
+        function animate() {
+            offset += 0.2;
+            if (offset > 110) {
+                offset = -10;
+                currentWordIndex = (currentWordIndex + 1) % words.length;
+                currentWord.textContent = words[currentWordIndex];
+            }
+            textPath.setAttribute('startOffset', `${offset}%`);
+            let opacity = 1;
+            if (offset < 0) {
+                opacity = Math.pow((offset + 10) / 10, 2);
+            } else if (offset > 100) {
+                opacity = Math.pow(1 - (offset - 100) / 10, 2);
+            }
+            text.setAttribute('opacity', opacity);
+            requestAnimationFrame(animate);
+        }
+        currentWord.textContent = words[currentWordIndex];
+        animate();
+    </script>
+</body>
+</html>

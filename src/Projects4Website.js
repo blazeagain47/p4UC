@@ -5,16 +5,25 @@ const Project = ({ title, shortDescription, longDescription, logos, inDevelopmen
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <div className={`bg-white rounded-lg shadow-lg p-6 mb-6 transition-all duration-500 ease-in-out ${
+      expanded ? 'col-span-3 row-span-2 scale-105 z-10' : 'col-span-1 scale-100'
+    }`}>
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-xl font-bold">{title}</h3>
-        <div className="flex space-x-2">
+        <div className="flex space-x-3 -mt-2 -mr-2">  {/* Adjusted positioning */}
           {logos && logos.map((logo, index) => (
-            <span key={index} className="bg-gray-200 text-xs font-semibold px-2 py-1 rounded-full">{logo}</span>
+            <img 
+              key={index}
+              src={`/${logo.toLowerCase()}.png`}
+              alt={`${logo} logo`}
+              className="h-10 w-10 object-contain"
+            />
           ))}
         </div>
       </div>
-      <p className="mb-4">{shortDescription}</p>
+      <p className={`mb-4 transition-all duration-500 ${expanded ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}>
+        {expanded ? longDescription : shortDescription}
+      </p>
       <button 
         onClick={() => setExpanded(!expanded)} 
         className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
@@ -22,8 +31,7 @@ const Project = ({ title, shortDescription, longDescription, logos, inDevelopmen
         {expanded ? 'Show Less' : 'Learn More'}
       </button>
       {expanded && (
-        <div className="mt-4">
-          <p className="mb-4">{longDescription}</p>
+        <div className="mt-4 transition-all duration-500 ease-in-out">
           {features && (
             <div>
               <h4 className="font-bold mb-2">Features Include:</h4>
@@ -82,16 +90,27 @@ const AgentBox = ({ name, description, logo }) => (
   <div className="bg-gray-100 rounded-lg p-4 relative">
     <h4 className="text-lg font-semibold mb-2">{name}</h4>
     <p>{description}</p>
-    <span className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-full">{logo}</span>
+    <img 
+      src={`/${logo.toLowerCase()}.png`}
+      alt={`${logo} logo`}
+      className="absolute top-1 right-1 h-8 w-8 object-contain"
+    />
   </div>
 );
 
 const Projects4Website = () => {
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <header className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <img src="/api/placeholder/50/50" alt="P4 nigga" className="h-10" />
+          <span className="font-['Roboto'] text-4xl font-black tracking-tighter">p4</span>
           <nav>
             <ul className="flex space-x-6">
               <li className="relative group">
@@ -99,12 +118,12 @@ const Projects4Website = () => {
                   Projects <ChevronDown className="ml-1 h-4 w-4" />
                 </button>
                 <ul className="absolute hidden group-hover:block bg-white shadow-md rounded-md mt-2">
-                  <li><a href="#public-projects" className="block px-4 py-2 hover:bg-gray-100">Public</a></li>
-                  <li><a href="#projects-in-development" className="block px-4 py-2 hover:bg-gray-100">In Development</a></li>
+                  <li><button onClick={() => scrollToSection('public-projects')} className="block px-4 py-2 hover:bg-gray-100 w-full text-left">Public</button></li>
+                  <li><button onClick={() => scrollToSection('projects-in-development')} className="block px-4 py-2 hover:bg-gray-100 w-full text-left">In Development</button></li>
                 </ul>
               </li>
-              <li><a href="#about-us">About Us</a></li>
-              <li><a href="#interested">Interested?</a></li>
+              <li><button onClick={() => scrollToSection('about-us')}>About Us</button></li>
+              <li><button onClick={() => scrollToSection('interested')}>Interested?</button></li>
             </ul>
           </nav>
         </div>
@@ -116,70 +135,75 @@ const Projects4Website = () => {
             <iframe 
               src="/logo.html" 
               width="1250" 
-              height="450" 
+              height="300" 
               frameBorder="0"
               title="Projects4 Logo"
               className="overflow-hidden"
+              scrolling="no"
             ></iframe>
           </div>
-          <p className="text-xl mb-6">
-            No longer should a lack of knowledge in code stop you from creating the projects of your dreams. Projects4 is a UC wide club dedicated to making cutting edge projects powered by the latest AI tools.
+          <p className="text-2xl font-semibold mb-6 max-w-2xl mx-auto">
+          Projects4 is a UC-wide club dedicated to making cutting-edge projects powered by the latest AI tools. No longer should a lack of knowledge in code stop you from creating the projects of your dreams. 
           </p>
-          <a href="#public-projects" className="bg-blue-500 text-white px-6 py-3 rounded-full text-lg hover:bg-blue-600 transition duration-300">
+          <button onClick={() => scrollToSection('public-projects')} className="bg-blue-500 text-white px-6 py-3 rounded-full text-lg hover:bg-blue-600 transition duration-300 mb-12">
             View Projects
-          </a>
+          </button>
         </section>
 
         <section id="public-projects" className="mb-12">
           <h2 className="text-3xl font-bold mb-6">Public Projects</h2>
-          <Project 
-            title="CourseDescribe" 
-            shortDescription="UCI's best tool for course research and planning. Especially for researching professors."
-            longDescription="CourseDescribe is the ultimate solution for UCI students looking to make informed decisions about their courses and professors. Our comprehensive platform offers a range of features designed to streamline your course planning process and provide valuable insights."
-            features={[
-              "Easy Course Look Up",
-              "Detailed course descriptions",
-              "Highly advanced instructor data (including RateMyProfessor data and sorting capabilities)",
-              "Prerequisites and Corequisites information",
-              "Real-time Class Availability updates",
-              "In-depth Grade Distribution analysis"
-            ]}
-            logos={['UCI']}
-          />
-          <Project 
-            title="StudyGuideHub" 
-            shortDescription="The first accessible and student-wide marketplace for course specific and test specific study guides."
-            longDescription="Originally founded at the University of California, Riverside (UCR), StudyGuideHub began with a mission to provide accessible, high-quality study materials to students. Thanks to our dedicated team and strong user support, we quickly gained recognition on campus. Building on this success, we've now expanded to the University of California, Irvine (UCI), continuing our commitment to empower students with top-notch study guides. Join us as we make studying a hell of a lot easier."
-            logos={['UCI', 'UCR']}
-          />
-          <Project 
-            title="Indeed AI Bot" 
-            shortDescription="Indeed AI Job and Internship Application and Automation"
-            longDescription="Here at Projects4, we don't have the time to spend brainlessly applying to jobs and internships. That's why we created a bot powered by the latest technologies in AI Web Automation integrated with GPT-4 and Phrasly to mass send out job and internship applications with tailored cover letters and company-specific questions generated from our resumes and profiles. We're currently developing automation for popular job sites including LinkedIn, Workday, Handshake, and more."
-            features={[
-              "Mass application submission",
-              "Tailored cover letter generation",
-              "Company-specific question responses",
-              "Integration with multiple job sites"
-            ]}
-          />
+          <div className="grid grid-cols-3 gap-6">
+            <Project 
+              title="CourseDescribe" 
+              shortDescription="UCI's premier tool for course research and planning."
+              longDescription="CourseDescribe is the ultimate solution for UCI students looking to make informed decisions about their courses and professors. Our comprehensive platform offers a range of features designed to streamline your course planning process and provide valuable insights."
+              features={[
+                "Easy Course Look Up",
+                "Detailed course descriptions",
+                "Highly advanced instructor data (including RateMyProfessor data and sorting capabilities)",
+                "Prerequisites and Corequisites information",
+                "Real-time Class Availability updates",
+                "In-depth Grade Distribution analysis"
+              ]}
+              logos={['UCI']}
+            />
+            <Project 
+              title="StudyGuideHub" 
+              shortDescription="The first accessible and student-wide marketplace for course specific study guides."
+              longDescription="Originally founded at the University of California, Riverside (UCR), StudyGuideHub began with a mission to provide accessible, high-quality study materials to students. Thanks to our dedicated team and strong user support, we quickly gained recognition on campus. Building on this success, we've now expanded to the University of California, Irvine (UCI), continuing our commitment to empower students with top-notch study guides. Join us as we make studying a hell of a lot easier."
+              logos={['UCI', 'UCR']}
+            />
+            <Project 
+              title="Indeed AI Bot" 
+              shortDescription="Indeed AI Job and Internship Application and Automation"
+              longDescription="Here at Projects4, we don't have the time to spend brainlessly applying to jobs and internships. That's why we created a bot powered by the latest technologies in AI Web Automation integrated with GPT-4 and Phrasly to mass send out job and internship applications with tailored cover letters and company-specific questions generated from our resumes and profiles. We're currently developing automation for popular job sites including LinkedIn, Workday, Handshake, and more."
+              features={[
+                "Mass application submission",
+                "Tailored cover letter generation",
+                "Company-specific question responses",
+                "Integration with multiple job sites"
+              ]}
+            />
+          </div>
         </section>
 
         <section id="projects-in-development" className="mb-12">
           <h2 className="text-3xl font-bold mb-6">Projects in Development</h2>
-          <Project 
-            title="ZScoot" 
-            shortDescription="UCI and UCR's first mobile and web app for scooter delivery of nearby restaurants and snacks"
-            longDescription="ZScoot is set to revolutionize the way UCI and UCR students get their food and snacks. As the first mobile and web app dedicated to scooter-based delivery from nearby restaurants and convenience stores, ZScoot offers a fast, eco-friendly, and cost-effective solution for hungry students on campus. Our platform will connect users with a network of student scooter drivers, ensuring quick deliveries and supporting the student community. With an intuitive interface and real-time tracking, ZScoot aims to make food delivery more accessible and efficient than ever before. The development team for this exciting project is filling up fast, so join now if you're interested in being part of this innovative venture!"
-            logos={['UCI', 'UCR']}
-            inDevelopment={true}
-          />
-          <Project 
-            title="Trading w/ AI Agents" 
-            shortDescription="Creating a one-of-a-kind Trading Automation with AI Agentic Workflow"
-            longDescription="This groundbreaking project aims to revolutionize the world of algorithmic trading by creating a sophisticated network of AI agents, each specialized in a crucial aspect of trading decision-making. By leveraging the power of artificial intelligence and machine learning, we're developing a system that can analyze market conditions, assess risks, and execute trades with unprecedented accuracy and speed."
-            inDevelopment={true}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Project 
+              title="ZScoot" 
+              shortDescription="UCI and UCR's first mobile and web app for scooter delivery of nearby restaurants and snacks"
+              longDescription="ZScoot is set to revolutionize the way UCI and UCR students get their food and snacks. As the first mobile and web app dedicated to scooter-based delivery from nearby restaurants and convenience stores, ZScoot offers a fast, eco-friendly, and cost-effective solution for hungry students on campus. Our platform will connect users with a network of student scooter drivers, ensuring quick deliveries and supporting the student community. With an intuitive interface and real-time tracking, ZScoot aims to make food delivery more accessible and efficient than ever before. The development team for this exciting project is filling up fast, so join now if you're interested in being part of this innovative venture!"
+              logos={['UCI', 'UCR']}
+              inDevelopment={true}
+            />
+            <Project 
+              title="Trading w/ AI Agents" 
+              shortDescription="Creating a one-of-a-kind Trading Automation with AI Agentic Workflow"
+              longDescription="This groundbreaking project aims to revolutionize the world of algorithmic trading by creating a sophisticated network of AI agents, each specialized in a crucial aspect of trading decision-making. By leveraging the power of artificial intelligence and machine learning, we're developing a system that can analyze market conditions, assess risks, and execute trades with unprecedented accuracy and speed."
+              inDevelopment={true}
+            />
+          </div>
         </section>
 
         <section id="about-us" className="mb-12">
@@ -239,10 +263,10 @@ const Projects4Website = () => {
             <div>
               <h4 className="text-lg font-bold mb-4">Quick Links</h4>
               <ul>
-                <li><a href="#" className="hover:text-gray-300">Home</a></li>
-                <li><a href="#public-projects" className="hover:text-gray-300">Projects</a></li>
-                <li><a href="#about-us" className="hover:text-gray-300">About Us</a></li>
-                <li><a href="#interested" className="hover:text-gray-300">Contact</a></li>
+                <li><button onClick={() => scrollToSection('top')} className="hover:text-gray-300">Home</button></li>
+                <li><button onClick={() => scrollToSection('public-projects')} className="hover:text-gray-300">Projects</button></li>
+                <li><button onClick={() => scrollToSection('about-us')} className="hover:text-gray-300">About Us</button></li>
+                <li><button onClick={() => scrollToSection('interested')} className="hover:text-gray-300">Contact</button></li>
               </ul>
             </div>
             <div>

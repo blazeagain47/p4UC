@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { ChevronDown, Instagram, MessageCircle } from 'lucide-react';
 
-const Project = ({ title, shortDescription, longDescription, logos, inDevelopment, features }) => {
-  const [expanded, setExpanded] = useState(false);
-
+const Project = ({ title, shortDescription, longDescription, logos, features, expanded, onExpand }) => {
   return (
-    <div className={`bg-white rounded-lg shadow-lg p-6 mb-6 transition-all duration-500 ease-in-out ${
-      expanded ? 'col-span-3 row-span-2 scale-105 z-10' : 'col-span-1 scale-100'
-    }`}>
+    <div
+      className={`bg-white rounded-lg shadow-lg p-6 mb-6 transition-all duration-500 ease-in-out 
+        ${expanded ? 'col-span-full max-w-4xl mx-auto' : 'flex-grow'} 
+        ${expanded ? 'lg:col-span-full' : 'lg:flex-grow'}`}
+    >
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-xl font-bold">{title}</h3>
-        <div className="flex space-x-3 -mt-2 -mr-2">  {/* Adjusted positioning */}
+        <div className="flex space-x-3 -mt-2 -mr-2">
           {logos && logos.map((logo, index) => (
             <img 
               key={index}
@@ -21,17 +21,17 @@ const Project = ({ title, shortDescription, longDescription, logos, inDevelopmen
           ))}
         </div>
       </div>
-      <p className={`mb-4 transition-all duration-500 ${expanded ? 'h-auto opacity-100' : 'h-0 opacity-0'}`}>
+      <p className={`mb-4 transition-all duration-500 ${expanded ? 'opacity-100' : 'opacity-0 h-0'}`}>
         {expanded ? longDescription : shortDescription}
       </p>
       <button 
-        onClick={() => setExpanded(!expanded)} 
+        onClick={onExpand} 
         className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition duration-300"
       >
         {expanded ? 'Show Less' : 'Learn More'}
       </button>
       {expanded && (
-        <div className="mt-4 transition-all duration-500 ease-in-out">
+        <div className="mt-4 transition-all duration-500 ease-in-out max-h-96 overflow-auto">  {/* Adjust the height of expanded section */}
           {features && (
             <div>
               <h4 className="font-bold mb-2">Features Include:</h4>
@@ -42,63 +42,15 @@ const Project = ({ title, shortDescription, longDescription, logos, inDevelopmen
               </ul>
             </div>
           )}
-          {title === "Trading w/ AI Agents" && (
-            <div className="mt-4">
-              <p className="text-lg font-semibold mb-2 italic">Think of all the different thought processes one makes when day trading. Now imagine each thought process was a highly trained AI Agent for that specific field. Now imagine those Agents literally communicating with each other in real time with real data.</p>
-              <p className="text-lg font-semibold mb-2">Meet our Agents</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <AgentBox 
-                  name="Agent Sniper" 
-                  description="Specialized in sniping the latest news and financial reports on different companies and crypto." 
-                  logo="UCSB"
-                />
-                <AgentBox 
-                  name="Agent Sentiment" 
-                  description="Trained for analyzing latest news/data on a stock/crypto and giving a 1-10 price pressure score (1 being high negative pressure and 10 being high positive pressure)." 
-                  logo="UCSB"
-                />
-                <AgentBox 
-                  name="Agent Einstein" 
-                  description="Trained at recognizing different price patterns and shapes considering multiple different factors." 
-                  logo="UCR"
-                />
-                <AgentBox 
-                  name="Agent Predictor" 
-                  description="Utilizes advanced machine learning algorithms to forecast short-term and long-term price movements based on historical data, current market conditions, and macroeconomic factors." 
-                  logo="UCLA"
-                />
-                <AgentBox 
-                  name="Agent Risk" 
-                  description="Continuously assesses and manages risk levels for potential trades, considering factors such as volatility, market liquidity, portfolio exposure, and global economic events." 
-                  logo="UCI"
-                />
-                <AgentBox 
-                  name="Agent Arbitrage" 
-                  description="Identifies and capitalizes on price discrepancies across different markets and exchanges, executing rapid trades to profit from these inefficiencies." 
-                  logo="UCSB"
-                />
-              </div>
-            </div>
-          )}
         </div>
       )}
     </div>
   );
 };
 
-const AgentBox = ({ name, description, logo }) => (
-  <div className="bg-gray-100 rounded-lg p-4 relative">
-    <h4 className="text-lg font-semibold mb-2">{name}</h4>
-    <p>{description}</p>
-    <img 
-      src={`/${logo.toLowerCase()}.png`}
-      alt={`${logo} logo`}
-      className="absolute top-1 right-1 h-8 w-8 object-contain"
-    />
-  </div>
-);
-
 const Projects4Website = () => {
+  const [expandedProject, setExpandedProject] = useState(null);
+
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -152,7 +104,7 @@ const Projects4Website = () => {
 
         <section id="public-projects" className="mb-12">
           <h2 className="text-3xl font-bold mb-6">Public Projects</h2>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Project 
               title="CourseDescribe" 
               shortDescription="UCI's premier tool for course research and planning."
@@ -166,12 +118,16 @@ const Projects4Website = () => {
                 "In-depth Grade Distribution analysis"
               ]}
               logos={['UCI']}
+              expanded={expandedProject === 'CourseDescribe'}
+              onExpand={() => setExpandedProject(expandedProject === 'CourseDescribe' ? null : 'CourseDescribe')}
             />
             <Project 
               title="StudyGuideHub" 
               shortDescription="The first accessible and student-wide marketplace for course specific study guides."
               longDescription="Originally founded at the University of California, Riverside (UCR), StudyGuideHub began with a mission to provide accessible, high-quality study materials to students. Thanks to our dedicated team and strong user support, we quickly gained recognition on campus. Building on this success, we've now expanded to the University of California, Irvine (UCI), continuing our commitment to empower students with top-notch study guides. Join us as we make studying a hell of a lot easier."
               logos={['UCI', 'UCR']}
+              expanded={expandedProject === 'StudyGuideHub'}
+              onExpand={() => setExpandedProject(expandedProject === 'StudyGuideHub' ? null : 'StudyGuideHub')}
             />
             <Project 
               title="Indeed AI Bot" 
@@ -183,6 +139,8 @@ const Projects4Website = () => {
                 "Company-specific question responses",
                 "Integration with multiple job sites"
               ]}
+              expanded={expandedProject === 'Indeed AI Bot'}
+              onExpand={() => setExpandedProject(expandedProject === 'Indeed AI Bot' ? null : 'Indeed AI Bot')}
             />
           </div>
         </section>
@@ -195,12 +153,16 @@ const Projects4Website = () => {
               shortDescription="UCI and UCR's first mobile and web app for scooter delivery of nearby restaurants and snacks"
               longDescription="ZScoot is set to revolutionize the way UCI and UCR students get their food and snacks. As the first mobile and web app dedicated to scooter-based delivery from nearby restaurants and convenience stores, ZScoot offers a fast, eco-friendly, and cost-effective solution for hungry students on campus. Our platform will connect users with a network of student scooter drivers, ensuring quick deliveries and supporting the student community. With an intuitive interface and real-time tracking, ZScoot aims to make food delivery more accessible and efficient than ever before. The development team for this exciting project is filling up fast, so join now if you're interested in being part of this innovative venture!"
               logos={['UCI', 'UCR']}
+              expanded={expandedProject === 'ZScoot'}
+              onExpand={() => setExpandedProject(expandedProject === 'ZScoot' ? null : 'ZScoot')}
               inDevelopment={true}
             />
             <Project 
               title="Trading w/ AI Agents" 
               shortDescription="Creating a one-of-a-kind Trading Automation with AI Agentic Workflow"
               longDescription="This groundbreaking project aims to revolutionize the world of algorithmic trading by creating a sophisticated network of AI agents, each specialized in a crucial aspect of trading decision-making. By leveraging the power of artificial intelligence and machine learning, we're developing a system that can analyze market conditions, assess risks, and execute trades with unprecedented accuracy and speed."
+              expanded={expandedProject === 'Trading w/ AI Agents'}
+              onExpand={() => setExpandedProject(expandedProject === 'Trading w/ AI Agents' ? null : 'Trading w/ AI Agents')}
               inDevelopment={true}
             />
           </div>

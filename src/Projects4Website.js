@@ -5,8 +5,7 @@ const Project = ({ title, shortDescription, longDescription, logos, features, ex
   return (
     <div
       className={`bg-white rounded-lg shadow-lg p-6 mb-6 transition-all duration-500 ease-in-out 
-        ${expanded ? 'col-span-full max-w-4xl mx-auto' : 'flex-grow'} 
-        ${expanded ? 'lg:col-span-full' : 'lg:flex-grow'}`}
+        ${expanded ? 'col-span-full max-w-4xl mx-auto' : 'w-full'}`}
     >
       <div className="flex justify-between items-start mb-4">
         <h3 className="text-xl font-bold">{title}</h3>
@@ -31,7 +30,7 @@ const Project = ({ title, shortDescription, longDescription, logos, features, ex
         {expanded ? 'Show Less' : 'Learn More'}
       </button>
       {expanded && (
-        <div className="mt-4 transition-all duration-500 ease-in-out max-h-96 overflow-auto">  {/* Adjust the height of expanded section */}
+        <div className="mt-4 transition-all duration-500 ease-in-out">
           {features && (
             <div>
               <h4 className="font-bold mb-2">Features Include:</h4>
@@ -42,11 +41,61 @@ const Project = ({ title, shortDescription, longDescription, logos, features, ex
               </ul>
             </div>
           )}
+          {title === "Trading w/ AI Agents" && (
+            <div className="mt-4">
+              <p className="text-lg font-semibold mb-2 italic">Think of all the different thought processes one makes when day trading. Now imagine each thought process was a highly trained AI Agent for that specific field. Now imagine those Agents literally communicating with each other in real time with real data.</p>
+              <p className="text-lg font-semibold mb-2">Meet our Agents</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <AgentBox 
+                  name="Agent Sniper" 
+                  description="Specialized in sniping the latest news and financial reports on different companies and crypto." 
+                  logo="UCSB"
+                />
+                <AgentBox 
+                  name="Agent Sentiment" 
+                  description="Trained for analyzing latest news/data on a stock/crypto and giving a 1-10 price pressure score (1 being high negative pressure and 10 being high positive pressure)." 
+                  logo="UCSB"
+                />
+                <AgentBox 
+                  name="Agent Einstein" 
+                  description="Trained at recognizing different price patterns and shapes considering multiple different factors." 
+                  logo="UCR"
+                />
+                <AgentBox 
+                  name="Agent Predictor" 
+                  description="Utilizes advanced machine learning algorithms to forecast short-term and long-term price movements based on historical data, current market conditions, and macroeconomic factors." 
+                  logo="UCLA"
+                />
+                <AgentBox 
+                  name="Agent Risk" 
+                  description="Continuously assesses and manages risk levels for potential trades, considering factors such as volatility, market liquidity, portfolio exposure, and global economic events." 
+                  logo="UCI"
+                />
+                <AgentBox 
+                  name="Agent Arbitrage" 
+                  description="Identifies and capitalizes on price discrepancies across different markets and exchanges, executing rapid trades to profit from these inefficiencies." 
+                  logo="UCSB"
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 };
+
+const AgentBox = ({ name, description, logo }) => (
+  <div className="bg-gray-100 rounded-lg p-4 relative">
+    <h4 className="text-lg font-semibold mb-2">{name}</h4>
+    <p>{description}</p>
+    <img 
+      src={`/${logo.toLowerCase()}.png`}
+      alt={`${logo} logo`}
+      className="absolute top-1 right-1 h-8 w-8 object-contain"
+    />
+  </div>
+);
 
 const Projects4Website = () => {
   const [expandedProject, setExpandedProject] = useState(null);
@@ -105,43 +154,46 @@ const Projects4Website = () => {
         <section id="public-projects" className="mb-12">
           <h2 className="text-3xl font-bold mb-6">Public Projects</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Project 
-              title="CourseDescribe" 
-              shortDescription="UCI's premier tool for course research and planning."
-              longDescription="CourseDescribe is the ultimate solution for UCI students looking to make informed decisions about their courses and professors. Our comprehensive platform offers a range of features designed to streamline your course planning process and provide valuable insights."
-              features={[
-                "Easy Course Look Up",
-                "Detailed course descriptions",
-                "Highly advanced instructor data (including RateMyProfessor data and sorting capabilities)",
-                "Prerequisites and Corequisites information",
-                "Real-time Class Availability updates",
-                "In-depth Grade Distribution analysis"
-              ]}
-              logos={['UCI']}
-              expanded={expandedProject === 'CourseDescribe'}
-              onExpand={() => setExpandedProject(expandedProject === 'CourseDescribe' ? null : 'CourseDescribe')}
-            />
-            <Project 
-              title="StudyGuideHub" 
-              shortDescription="The first accessible and student-wide marketplace for course specific study guides."
-              longDescription="Originally founded at the University of California, Riverside (UCR), StudyGuideHub began with a mission to provide accessible, high-quality study materials to students. Thanks to our dedicated team and strong user support, we quickly gained recognition on campus. Building on this success, we've now expanded to the University of California, Irvine (UCI), continuing our commitment to empower students with top-notch study guides. Join us as we make studying a hell of a lot easier."
-              logos={['UCI', 'UCR']}
-              expanded={expandedProject === 'StudyGuideHub'}
-              onExpand={() => setExpandedProject(expandedProject === 'StudyGuideHub' ? null : 'StudyGuideHub')}
-            />
-            <Project 
-              title="Indeed AI Bot" 
-              shortDescription="Indeed AI Job and Internship Application and Automation"
-              longDescription="Here at Projects4, we don't have the time to spend brainlessly applying to jobs and internships. That's why we created a bot powered by the latest technologies in AI Web Automation integrated with GPT-4 and Phrasly to mass send out job and internship applications with tailored cover letters and company-specific questions generated from our resumes and profiles. We're currently developing automation for popular job sites including LinkedIn, Workday, Handshake, and more."
-              features={[
-                "Mass application submission",
-                "Tailored cover letter generation",
-                "Company-specific question responses",
-                "Integration with multiple job sites"
-              ]}
-              expanded={expandedProject === 'Indeed AI Bot'}
-              onExpand={() => setExpandedProject(expandedProject === 'Indeed AI Bot' ? null : 'Indeed AI Bot')}
-            />
+            {[
+              {
+                title: "CourseDescribe",
+                shortDescription: "UCI's premier tool for course research and planning.",
+                longDescription: "CourseDescribe is the ultimate solution for UCI students looking to make informed decisions about their courses and professors. Our comprehensive platform offers a range of features designed to streamline your course planning process and provide valuable insights.",
+                features: [
+                  "Easy Course Look Up",
+                  "Detailed course descriptions",
+                  "Highly advanced instructor data (including RateMyProfessor data and sorting capabilities)",
+                  "Prerequisites and Corequisites information",
+                  "Real-time Class Availability updates",
+                  "In-depth Grade Distribution analysis"
+                ],
+                logos: ['UCI']
+              },
+              {
+                title: "StudyGuideHub",
+                shortDescription: "The first accessible and student-wide marketplace for course specific study guides.",
+                longDescription: "Originally founded at the University of California, Riverside (UCR), StudyGuideHub began with a mission to provide accessible, high-quality study materials to students. Thanks to our dedicated team and strong user support, we quickly gained recognition on campus. Building on this success, we've now expanded to the University of California, Irvine (UCI), continuing our commitment to empower students with top-notch study guides. Join us as we make studying a hell of a lot easier.",
+                logos: ['UCI', 'UCR']
+              },
+              {
+                title: "Indeed AI Bot",
+                shortDescription: "Indeed AI Job and Internship Application and Automation",
+                longDescription: "Here at Projects4, we don't have the time to spend brainlessly applying to jobs and internships. That's why we created a bot powered by the latest technologies in AI Web Automation integrated with GPT-4 and Phrasly to mass send out job and internship applications with tailored cover letters and company-specific questions generated from our resumes and profiles. We're currently developing automation for popular job sites including LinkedIn, Workday, Handshake, and more.",
+                features: [
+                  "Mass application submission",
+                  "Tailored cover letter generation",
+                  "Company-specific question responses",
+                  "Integration with multiple job sites"
+                ]
+              }
+            ].map((project, index) => (
+              <Project
+                key={index}
+                {...project}
+                expanded={expandedProject === project.title}
+                onExpand={() => setExpandedProject(expandedProject === project.title ? null : project.title)}
+              />
+            ))}
           </div>
         </section>
 
@@ -155,7 +207,6 @@ const Projects4Website = () => {
               logos={['UCI', 'UCR']}
               expanded={expandedProject === 'ZScoot'}
               onExpand={() => setExpandedProject(expandedProject === 'ZScoot' ? null : 'ZScoot')}
-              inDevelopment={true}
             />
             <Project 
               title="Trading w/ AI Agents" 
@@ -163,7 +214,6 @@ const Projects4Website = () => {
               longDescription="This groundbreaking project aims to revolutionize the world of algorithmic trading by creating a sophisticated network of AI agents, each specialized in a crucial aspect of trading decision-making. By leveraging the power of artificial intelligence and machine learning, we're developing a system that can analyze market conditions, assess risks, and execute trades with unprecedented accuracy and speed."
               expanded={expandedProject === 'Trading w/ AI Agents'}
               onExpand={() => setExpandedProject(expandedProject === 'Trading w/ AI Agents' ? null : 'Trading w/ AI Agents')}
-              inDevelopment={true}
             />
           </div>
         </section>
